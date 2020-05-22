@@ -219,3 +219,9 @@ Al igual que en el modo asíncrono, usted puede decidir consumirlo o no. Debe te
 Un ejemplo básico: recibe un mensaje de creación de producto, asignado a una categoría de la que aún no dispone. En este caso, debe obviar el mensaje a la espera de recibir un mensaje de creción de esa categoría.
 
 Una vez usted quiera dejar de recibir el mensaje, debe "consumirlo" retornando un código http 202. Mientras esto no suceda, el sistema seguirá enviándole mensajes casi en tiempo real.
+
+```
+function test() {
+  console.log("notice the blank line before this function?");
+}
+```
