@@ -49,7 +49,7 @@ Debe crear un fichero php que se encargará de recibir los paquetes y procesarlo
 
 La mejor forma de instalar esta librería es utilizar el gestor de librerías Composer.
 
-``$ composer require google/cloud-pubsub``
+$ composer require google/cloud-pubsub
 
 
 
@@ -57,68 +57,69 @@ La mejor forma de instalar esta librería es utilizar el gestor de librerías Co
 
 Cree un fichero PHP con el siguiente contenido:
 
+```
+require 'vendor/autoload.php';
 
-``require 'vendor/autoload.php';``
+use Google\Cloud\PubSub\PubSubClient;
+// Archivo json proporcionado por Jim Sports
 
-``use Google\Cloud\PubSub\PubSubClient;``
-``// Archivo json proporcionado por Jim Sports``
+$json_file = 'archivo.json';
 
-``$json_file = 'archivo.json';``
+$json_content = (array)json_decode(file_get_contents($json_file));
 
-``$json_content = (array)json_decode(file_get_contents($json_file));``
+// Suscripciones
 
-``// Suscripciones``
+$suscriptions = $json_content["client_suscriptions"];
 
-``$suscriptions = $json_content["client_suscriptions"];``
+putenv('GOOGLE_APPLICATION_CREDENTIALS='.$json_file);
 
-``putenv('GOOGLE_APPLICATION_CREDENTIALS='.$json_file);``
+$pubSub = new PubSubClient([
 
-``$pubSub = new PubSubClient([``
+	'projectId' => $json_content["project_id"]
 
-``	'projectId' => $json_content["project_id"]``
+]);
 
-``]);``
+// Recorrer las suscripciones
 
-``// Recorrer las suscripciones``
+foreach ($suscriptions as $suscription) {
 
-``foreach ($suscriptions as $suscription) {``
+	// Nombre de la suscripción proporcionada por Jim Sports
 
-``	// Nombre de la suscripción proporcionada por Jim Sports``
-
-``	$subscription = $pubSub->subscription($suscription);``
+	$subscription = $pubSub->subscription($suscription);
 
 
-``	// Descargar todos los mensajes pendientes``
+	// Descargar todos los mensajes pendientes
 
-``	$messages = $subscription->pull();``
+	$messages = $subscription->pull();
 
-``	// Recorrer los mensajes descargados``
+	// Recorrer los mensajes descargados
 
-``	foreach ($messages as $message) {``
+	foreach ($messages as $message) {
 
-``		// El mensaje llega comprimido y en formato json``
+		// El mensaje llega comprimido y en formato json
 
-``		$data = gzuncompress($message->data());``
+		$data = gzuncompress($message->data());
 
-``		$data = json_decode($data, true);``
+		$data = json_decode($data, true);
 
-``		// Array de atributos [object, timestamp, action] y opcionalmente [parts]``
+		// Array de atributos [object, timestamp, action] y opcionalmente [parts]
 
-``		$attributes = $message->attributes();``
+		$attributes = $message->attributes();
 
-``		// Id del mensaje``
-``		$messageId = $message->id();``
+		// Id del mensaje
+		$messageId = $message->id();
 		
-``		// Array con la información``
-``		var_dump($data);``
+		// Array con la información
+		var_dump($data);
 
-``		// Marcar mensaje como leído (consumirlo)``
+		// Marcar mensaje como leído (consumirlo)
 
-``		$subscription->acknowledge($message);``
+		$subscription->acknowledge($message);
 
-``	}``
+	}
 
-``}``
+}
+```
 
 ### Paso 3 - Recorrer los mensajes 
 
@@ -142,11 +143,11 @@ Debe crear un fichero php (endpoint) que se encargará de recepcionar los paquet
 
 La mejor forma de instalar esta librería es utilizar el gestor de librerías Composer.
 
-``$ composer require google/cloud-pubsub``
+$ composer require google/cloud-pubsub
 
 Además necesitará instalar la librería apiclient de google:
 
-``$ composer require google/apiclient``
+$ composer require google/apiclient
 
 
 
@@ -154,62 +155,63 @@ Además necesitará instalar la librería apiclient de google:
 
 Cree un fichero PHP con el siguiente contenido:
 
-``require 'vendor/autoload.php';``
+```
+require 'vendor/autoload.php';
 
-``use Google\Cloud\PubSub\PubSubClient;``
+use Google\Cloud\PubSub\PubSubClient;
 
-``// Archivo json proporcionado por Jim Sports``
+// Archivo json proporcionado por Jim Sports
 
-``$json_file = 'archivo.json';``
+$json_file = 'archivo.json';
 
-``$json_content = (array)json_decode(file_get_contents($json_file));``
+$json_content = (array)json_decode(file_get_contents($json_file));
 
-``$headers = getallheaders();``
+$headers = getallheaders();
 
-``$content = json_decode(file_get_contents("php://input"), true);``
+$content = json_decode(file_get_contents("php://input"), true);
 
-``if(isset($headers['Authorization'])){``
+if(isset($headers['Authorization'])){
 
-``	$token = str_replace("Bearer ", "", $headers['Authorization']);``
+	$token = str_replace("Bearer ", "", $headers['Authorization']);
 
-``	$client = new Google_Client(); ``
+	$client = new Google_Client(); 
 
-``	$client->setAuthConfig($json_content);``
+	$client->setAuthConfig($json_content);
 
-``	// Verificar mediante token``
+	// Verificar mediante token
 
-``	if($client->verifyIdToken($token)){``
+	if($client->verifyIdToken($token)){
 
-``		// Mensaje``
+		// Mensaje
 
-``		$mensaje = $content['message'];``
+		$mensaje = $content['message'];
 
-``		// Id del mensaje``
+		// Id del mensaje
 
-``		$messageId = $mensaje["messageId"];``
+		$messageId = $mensaje["messageId"];
 
-``		// Atributos``
+		// Atributos
 
-``		$attributes = $mensaje["attributes"];``
+		$attributes = $mensaje["attributes"];
 
-``		// Timestamp``
+		// Timestamp
 
-``		$timestamp = $attributes["timestamp"];``
+		$timestamp = $attributes["timestamp"];
 		
-``		// El mensaje llega comprimido y en formato json``
+		// El mensaje llega comprimido y en formato json
 
-``		$data = gzuncompress(base64_decode($mensaje["data"]));``
+		$data = gzuncompress(base64_decode($mensaje["data"]));
 
-``		$data = json_decode($data, true);	``
+		$data = json_decode($data, true);	
 		
-``		// Marcar mensaje como leído (consumirlo)``
+		// Marcar mensaje como leído (consumirlo)
 
-``		http_response_code(202);		``
+		http_response_code(202);		
 
-``	}``
+	}
 
-``}``
-
+}
+```
 
 
 ### Paso 3 - Recibir el mensaje
@@ -220,8 +222,3 @@ Un ejemplo básico: recibe un mensaje de creación de producto, asignado a una c
 
 Una vez usted quiera dejar de recibir el mensaje, debe "consumirlo" retornando un código http 202. Mientras esto no suceda, el sistema seguirá enviándole mensajes casi en tiempo real.
 
-```
-function test() {
-  console.log("notice the blank line before this function?");
-}
-```
