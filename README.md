@@ -1,7 +1,3 @@
-# js_b2b_php
-Documentación para recibir información de Jim Sports con PHP
-
-============================================================
 Sincronización de datos para clientes de Jim Sports
 ============================================================
 
@@ -12,16 +8,18 @@ Para ello, se utiliza el servicio de distribución de información Google Pub/Su
 Más información sobre `Google Pub/Sub <https://cloud.google.com/pubsub/>`_
 
 
-********************************
-Información en forma de paquetes
-********************************
+
+## Información en forma de paquetes
+
 El sistema envía paquetes de información desde sus servidores al cliente. Este envío puede realizarse de forma síncrona o asíncrona.
 
 Los paquetes serán enviados de forma reiterada hasta que su sistema le comunique a Google que ha consumido correctamente el mensaje. En cuanto esto pase, el mensaje dejará de estar disponible y será eliminado de la cola.
 
-Suscripciones
--------------------------------------------------
+## Suscripciones
+
 Como cliente de Jim Sports usted estará suscrito a dos temas (topics). Gracias a estas suscripciones recibirá paquetes de información.
+
+
 
 Paquetes
 -------------------------------------------------
@@ -34,28 +32,29 @@ En cualquier caso, este sistema no asegura que los paquetes sean entregados de f
 Todos los paquetes se subministrarán comprimidos y en formato json.
 
 
-*************
-Instrucciones
-*************
+
+## Instrucciones
 
 Para poder recibir información es necesario disponer de unas credenciales de acceso que le serán facilitadas por Jim Sports. Estas credenciales se le entregarán por correo electrónico, en un fichero con extensión json.
+
+
 
 Modo asíncrono
 -------------------------------------------------
 Debe crear un fichero php que se encargará de recibir los paquetes y procesarlos.
 
 
-Paso 1 - Instalar librerías de Google Pub/Sub 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-
+### Paso 1 - Instalar librerías de Google Pub/Sub 
 
 La mejor forma de instalar esta librería es utilizar el gestor de librerías Composer.
 
 ``$ composer require google/cloud-pubsub``
 
-Paso 2 - Crear el fichero PHP para la recepción de mensajes 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+### Paso 2 - Crear el fichero PHP para la recepción de mensajes 
+
 Cree un fichero PHP con el siguiente contenido:
 
 
@@ -121,9 +120,8 @@ Cree un fichero PHP con el siguiente contenido:
 
 ``}``
 
+### Paso 3 - Recorrer los mensajes 
 
-Paso 3 - Recorrer los mensajes 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Cuando usted recorra los mensajes, puede decidir consumirlo o no. Debe tener presente que el orden de los mensajes puede no ser el correcto, por lo que quizás prefiera no consumir un mensaje antes que otro. 
 
 Un ejemplo básico: recibe un mensaje de creación de producto, asignado a una categoría de la que aún no dispone. En este caso, debe obviar el mensaje a la espera de recibir un mensaje de creción de esa categoría.
@@ -131,13 +129,15 @@ Un ejemplo básico: recibe un mensaje de creación de producto, asignado a una c
 Una vez usted quiera dejar de recibir el mensaje, debe "consumirlo".
 
 
+
+
 Modo síncrono
 -------------------------------------------------
 Debe crear un fichero php (endpoint) que se encargará de recepcionar los paquetes y procesarlos. Deberá notificar a Jim Sports la url de este endpoint. 
 
 
-Paso 1 - Instalar librerías de Google Pub/Sub 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+### Paso 1 - Instalar librerías de Google Pub/Sub 
 
 
 La mejor forma de instalar esta librería es utilizar el gestor de librerías Composer.
@@ -148,8 +148,10 @@ Además necesitará instalar la librería apiclient de google:
 
 ``$ composer require google/apiclient``
 
-Paso 2 - Crear el fichero PHP para la recepción de mensajes (endpoint)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+### Paso 2 - Crear el fichero PHP para la recepción de mensajes (endpoint)
+
 Cree un fichero PHP con el siguiente contenido:
 
 ``require 'vendor/autoload.php';``
@@ -210,9 +212,8 @@ Cree un fichero PHP con el siguiente contenido:
 
 
 
+### Paso 3 - Recibir el mensaje
 
-Paso 3 - Recibir el mensaje
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Al igual que en el modo asíncrono, usted puede decidir consumirlo o no. Debe tener presente que el orden de los mensajes puede no ser el correcto, por lo que quizás prefiera no consumir un mensaje antes que otro. 
 
 Un ejemplo básico: recibe un mensaje de creación de producto, asignado a una categoría de la que aún no dispone. En este caso, debe obviar el mensaje a la espera de recibir un mensaje de creción de esa categoría.
