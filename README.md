@@ -10,7 +10,7 @@
 
 # Sincronización de datos para clientes de Jim Sports
 
-El propósito de este repositorio es que sirva de guía para el desarrollo de un módulo o plugin en PHP que permita recibir información desde Jim Sports de forma automática y mantenerla actualizada. Si usa Prestashop 1.7 contacte con el departamento de desarrollo de Jim Sports ya que tenemos un módulo funcional que puede instalar directamente.
+El propósito de este repositorio es que sirva de guía para el desarrollo de un módulo o plugin que permita recibir información desde Jim Sports de forma automática y mantenerla actualizada. Si usa Prestashop 1.7 contacte con el departamento de desarrollo de Jim Sports ya que tenemos un módulo funcional que puede instalar directamente.
 
 Aunque la documentación contiene ejemplos en PHP la parte en la que se explican las suscripciones, paquetes y su estructura es común para cualquier lenguaje, actualmente Google Pub/Sub tiene librerías para:
 
